@@ -1,0 +1,32 @@
+version: '3'
+
+networks:
+ kaggle_network:
+  name: kaggle_network
+  driver: bridge
+  ipam:
+   driver: default
+   config:
+     - subnet: 192.168.100.0/24
+
+services:
+  pythonscript:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      shm_size: '2gb'
+
+    image: hinamimi/atcoder:dev
+    container_name: KyoPro
+    volumes:    
+      - /home/ryuichi/KyoPro:/root/:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+        
+    restart: always
+   
+       
+    networks:
+     kaggle_network:
+      ipv4_address: 192.168.100.100
+
