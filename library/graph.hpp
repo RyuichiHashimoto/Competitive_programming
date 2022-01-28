@@ -56,51 +56,63 @@ public:
     }
 };
 
-vector<int> Dykstra(Graph &graph, int s)
+namespace Dykstra
 {
-    /*  
-        s:  start idx;
-    */
 
-    int INF = 0x7FFFFFFF;
-
-    if (s < graph.minimum_node_idx || s > graph.maximum_node_idx)
+    void add_edge(Graph &graph, int from, int to, int cost)
     {
-        cerr << "There is no such a index: minimum is " << graph.minimum_node_idx << " and maximum is " << graph.maximum_node_idx << endl
-             << "not " << s;
-        exit(1);
+        edge e(from, to, 0, cost, 0);
+        graph.add_edge(e);
     }
 
-    vector<int> ret_distance(graph.n_vetrics);
-    fill(ret_distance.begin(), ret_distance.end(), INF);
-
-    // P: Pair<int, int>
-    //    first int: metrics(e.g., cost, distance)
-    //    second int: index of the node;
-    priority_queue<P, vector<P>, greater<P>> que;
-
-    ret_distance[s] = 0;
-    que.push(P(0, s));
-
-    while (!que.empty())
+    vector<int> Dykstra(Graph &graph, int s)
     {
-        P p = que.top();
-        que.pop();
+        /*  
+        s:  start idx;
+        */
 
-        int v = p.second;
+        int INF = 0x7FFFFFFF;
 
-        rep(i, graph.G[v].size())
+        if (s < graph.minimum_node_idx || s > graph.maximum_node_idx)
         {
-            edge &e = graph.G[v][i];
+            cerr << "There is no such a index: minimum is " << graph.minimum_node_idx << " and maximum is " << graph.maximum_node_idx << endl
+                 << "not " << s;
+            exit(1);
+        }
 
-            if (ret_distance[e.to] > ret_distance[e.from] + e.cost)
+        vector<int> ret_distance(graph.n_vetrics);
+        fill(ret_distance.begin(), ret_distance.end(), INF);
+
+        // P: Pair<int, int>
+        //    first int: metrics(e.g., cost, distance)
+        //    second int: index of the node;
+        priority_queue<P, vector<P>, greater<P>> que;
+
+        ret_distance[s] = 0;
+        que.push(P(0, s));
+
+        while (!que.empty())
+        {
+            P p = que.top();
+            que.pop();
+
+            int v = p.second;
+
+            rep(i, graph.G[v].size())
             {
-                ret_distance[e.to] = ret_distance[e.from] + e.cost;
-                que.push(P(ret_distance[e.to], e.to));
+                edge &e = graph.G[v][i];
+
+                if (ret_distance[e.to] > ret_distance[e.from] + e.cost)
+                {
+
+                    ret_distance[e.to] = ret_distance[e.from] + e.cost;
+                    que.push(P(ret_distance[e.to], e.to));
+                }
             }
         }
+
+        return ret_distance;
     }
-    return ret_distance;
 }
 
 vector<int> get_dist(Graph &graph, int start)
