@@ -2,6 +2,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+
+typedef long long ll;
+
 namespace prime_number
 {
 
@@ -19,7 +23,7 @@ namespace prime_number
             False: 引数 numberが素数ではない
             計算量: sqrt(number)
         */
-        for (ll i = 2; i * i < number; i++)
+        for (ll i = 2; i * i <= number; i++)
         {
             if (number % i == 0)
                 return false;
@@ -36,7 +40,7 @@ namespace prime_number
         */
         vector<ll> res;
 
-        for (int i = 1; i * i < number; i++)
+        for (int i = 1; i * i <= number; i++)
         {
 
             if (number % i == 0)
@@ -51,25 +55,24 @@ namespace prime_number
         return res;
     }
 
-    vector<P> prime_factor_as_vect(ll number)    
-    {        
+    vector<P> prime_factor_as_vect(ll number)
+    {
 
         vector<P> ret;
-        for (ll i = 2; i * i <= number; i++)
+        for (ll i = 2; i * i < number; i++)
         {
-            ll count = 0;            
-            while ((number % i) == 0)
-
+            ll count = 0;
+            while (number % i == 0)
             {
                 count++;
-                number = number / i;                
+                number = number / i;
             }
-            
             if (count != 0)
                 ret.push_back(P(i, count));
         }
-        if (number != 1) ret.push_back(P(number, 1));
-        
+        if (number != 1)
+            ret.push_back(P(number, 1));
+
         return ret;
     }
 
@@ -77,7 +80,7 @@ namespace prime_number
     {
         map<ll, ll> ret;
 
-        for (ll i = 2; i * i <= number; i++)
+        for (ll i = 2; i * i < number; i++)
         {
             ll count = 0;
             while (number % i == 0)
@@ -87,50 +90,28 @@ namespace prime_number
             }
             ret[i] = count;
         }
-        
-        if (number != 1) ret[number] = 1;
+
+        if (number != 1)
+            ret[number] = 1;
 
         return ret;
     }
 }
 
-typedef long long ll;
-
 int main(void)
 {
-
-    ll N;
-    cin >> N;    
-
-    vector<prime_number::P> result = prime_number::prime_factor_as_vect(N);
-
-
-    ll ret = 0;
-    for (int i = 0; i < (int)result.size(); i++)
-    {        
-        ret += result[i].second;
-    }
-    
-    if (ret == 1)
+    ll K;
+    cin >> K;
+    ll counter=0;
+    for (ll i = 1; i * i * i <= K; i++)
     {
-        cout << 0;
-    }
-    else
-    {
-
-        ll count = 0;
-        ll s = 1;
-        do
+        for (ll j = i;  i*j * j <= K; j++)
         {
-            if (s >= ret){
-                break;
+            if ( K %(i*j) ==0){
+                counter++;
             }
-
-            count++;
-            s *= 2;
-        } while (1);
-        cout << count << endl;
+        }
     }
+    cout << counter << endl;
 }
-
-    
+     
