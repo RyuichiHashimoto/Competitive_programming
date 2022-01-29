@@ -138,7 +138,7 @@ namespace prime_number
     */
     vector<int> Eratosthenes(int N)
     {
-
+        cout << "mikakunin" << endl;
         vector<int> prime_list;
 
         bool *is_prime = new bool[N];
