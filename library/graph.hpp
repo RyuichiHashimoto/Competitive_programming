@@ -417,7 +417,7 @@ namespace SCC
 {
 
     void add_edge(Graph &, int, int);
-    void post_order_by_dfs(Graph &, vector<int> &, vector<bool> &, int);
+    void __post_order_by_dfs(Graph &, vector<int> &, vector<bool> &, int);
     void __create_inverse_graph(Graph &, Graph &);
 
     void add_edge(Graph &graph, int from, int to)
