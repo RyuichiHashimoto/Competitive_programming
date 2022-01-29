@@ -150,7 +150,7 @@ namespace prime_number
             {
                 prime_list.push_back(i);
 
-                for (int j = 1; j * i < N; j++)
+                for (int j = 1; j * i <= N; j++)
                 {
                     is_prime[i * j] = false;
                 }
