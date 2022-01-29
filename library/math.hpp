@@ -132,6 +132,33 @@ namespace prime_number
 
         return ret;
     }
+
+    /*
+       N以下の素数を列挙する。
+    */
+    vector<int> Eratosthenes(int N)
+    {
+
+        vector<int> prime_list;
+
+        bool *is_prime = new bool[N];
+        fill(is_prime, is_prime + N, true);
+
+        for (int i = 2; i <= N; i++)
+        {
+            if (is_prime[i])
+            {
+                prime_list.push_back(i);
+
+                for (int j = 1; j * i < N; j++)
+                {
+                    is_prime[i * j] = false;
+                }
+            }
+        }
+        delete is_prime;
+        return prime_list;
+    }
 }
 
 
