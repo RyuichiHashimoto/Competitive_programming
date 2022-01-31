@@ -73,7 +73,7 @@ namespace segment_tree{
 
     typedef long long ll;
 
-    class segment_tree
+    class segment_tree_for_maximum
     {
 
         private:
@@ -159,7 +159,7 @@ namespace segment_tree{
             }
 
         public:
-            segment_tree(int N)
+            void init(int N)
             {
 
                 n_leafs = 1;
@@ -171,6 +171,20 @@ namespace segment_tree{
                 }
                 dat.resize(2 * n_leafs);
                 cache.resize(2 * n_leafs);
+            }
+
+            segment_tree_for_maximum()
+            {
+                dat.clear();
+                cache.clear();
+            }
+
+            /*
+                [left,right)の最良値を返す。
+            */
+            ll query(int left, int right)
+            {
+                return __query(left, right, 0, 0, n_leafs);
             }
 
             /*
