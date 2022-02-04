@@ -55,16 +55,58 @@ public:
     }
 };
 
-const int MAX_E = 3001;
-int dp[MAX_E][MAX_E];
+
+
+/*xから到達可能な中で最長位置*/
+int max_distance(int start_point,Graph &graph, vector<int>& dp,vector<bool> &used){
+    
+    if (used[start_point]){
+        return dp[start_point];
+    } else {
+
+        // int max_distance_ = 0;
+        int max_distance_ = 0;
+        used[start_point] = true;
+
+        for(edge e: graph.G[start_point]){
+            // cout << e.from <<" " << e.to<<endl;
+            max_distance_ = max(max_distance(e.to,graph,dp,used)+1,max_distance_);
+        }
+        // cout << max_distance<<endl;
+        dp[start_point] = max_distance_;
+     
+        return max_distance_;
+    }
+}
+
 
 int main(void)
 {
     int N,M;
     cin >> N >> M;
 
+    vector<int> dp(N+1);
+    vector<bool> used(N+1);
+
+    fill(used.begin(),used.end(),false);
+
     Graph graph(N);
 
+    rep(i,1,M){
+        int x,y;
+        cin >> x >> y;
 
-
+        edge e = edge(x,y,0,0,0);
+        graph.add_edge(e);
+    }
+    int max_val = -1;
+    rep(i,1,N){        
+        max_val = max(max_val,max_distance(i,graph,dp,used));
+    }
+    rep(i,1,N){
+        // cout << dp[i]<<endl;
+    }
+    
+    
+    cout << max_val<<endl;
 }
