@@ -117,7 +117,7 @@ namespace Dykstra
 
 vector<int> get_dist(Graph &graph, int start)
 {
-    vector<int> ret(graph.n_vetrics);
+    vector<int> ret(graph.n_vetrics+1);
     queue<int> que;
     int INF_ = 0x7FFFFFFF;
     fill(ret.begin(), ret.end(), INF_);
@@ -133,7 +133,7 @@ vector<int> get_dist(Graph &graph, int start)
         for (int i = 0; i < graph.G[index].size(); i++)
         {
             int t = graph.G[index][i].to;
-            if (ret[t] == INF_)
+            if (ret[t] == INF_) 
             {
                 ret[t] = ret[index] + 1;
                 que.push(t);
@@ -450,7 +450,6 @@ namespace SCC
     */
     vector<vector<int>> SCC(Graph &graph)
     {
-
         Graph inverse_graph(graph.n_vetrics);
 
         //アルゴリズムに強連結成分が必要なので、事前に作成
