@@ -82,7 +82,7 @@ namespace prime_number
             if (number % i == 0)
             {
                 res.push_back(i);
-                if (i * i == number)
+                if (i * i != number)
                 {
                     res.push_back(number / i);
                 }
