@@ -76,7 +76,7 @@ namespace prime_number
         */
         vector<ll> res;
 
-        for (int i = 1; i * i <= number; i++)
+        for (ll i = 1; i * i <= number; i++)
         {
 
             if (number % i == 0)
