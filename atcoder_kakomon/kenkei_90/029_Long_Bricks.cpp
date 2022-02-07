@@ -47,9 +47,9 @@ namespace segment_tree
         }
 
         /*
-                [left, right)の範囲を値xで塗り替える。
+            [left, right)の範囲を値xで塗り替える。
                 
-            */
+        */
         void __update(int left, int right, ll x, int k, int l, int r)
         {
             push(k);
