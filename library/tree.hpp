@@ -73,7 +73,7 @@ namespace segment_tree{
 
     typedef long long ll;
 
-    class segment_tree_for_maximum
+    class range_max
     {
 
         private:
