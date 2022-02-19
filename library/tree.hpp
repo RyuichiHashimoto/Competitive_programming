@@ -66,6 +66,13 @@ namespace tree {
 
     template <typename T>
     vector<int> get_leaf_nodes(tree<T> &tree) {
+        /*
+            与えられた木構造の葉ノードの番号を取得
+            計算量：O(E), *Eはエッジ数
+
+            tree: 木構造
+        */
+
         vector<int> ret;
 
         for (int i = 1; i <= tree.n_nodes; i++) {
@@ -77,18 +84,45 @@ namespace tree {
     }
 
     template <typename T>
-    void connect_nodes(tree<T> &tree, int root_node_id, vector<vector<int>> &relations) {
-        tree.root_node = root_node_id;
+    void connect_nodes(tree<T> &tree, int root_node_id, vector<vector<int>> &adjacency_matrix) {
+        /*
+            与えられた隣接行列に基づき、木構造の親子関係を決定していく（node.children, node.parentなどを埋めていく）
+            計算量：O(E), *Eはエッジ数
 
+            tree: 木構造
+
+            root_node_id: 木構造の根ノードの番号
+
+            adjacency_matrix: 隣接行列
+                            　内部グラフを持たないことは前提条件（チェックしていない）
+
+        */
+
+        tree.root_node = root_node_id;
         tree.nodes[root_node_id].parent = -1;
         vector<bool> used(tree.n_nodes + 1);
         fill(used.begin(), used.end(), false);
 
-        __dfs__for_connect_node(tree, root_node_id, relations, used);
+        __dfs__for_connect_node(tree, root_node_id, adjacency_matrix, used);
     }
 
     template <typename T>
     void calc_child_size(tree<T> &tree, int target_node) {
+        /*
+            指定したノードの子孫ノードの総数を求める関数（自身のノードはカウントに含めない）
+            深さ優先探索で実装。キャッシュ機能あり。
+            結果は、treeクラス内部のchild_n_nodesオブジェクトで保管
+            計算量：O(E), *Eはエッジ数
+
+
+            tree: 木構造(親子関係：指定済)
+
+            target_node: ノード番号
+
+
+        */
+
+
         if (tree.child_n_nodes[target_node] != -1) {
             return;
         }
