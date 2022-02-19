@@ -54,7 +54,9 @@ public:
     {
         return G[idx].size();
     }
+
 };
+
 
 namespace Dykstra
 {
