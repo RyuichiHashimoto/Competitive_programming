@@ -30,9 +30,11 @@ int main(void)
     dp[0][0] = 1;
 
     rep(i,0,N){
-        rep(S,0,1<<N){
-            int bit_info = 1;
-            int counter = 0;
+        rep(msk,0,1<<N){
+
+            if (__buildin_popcount(msk)){
+                
+            }
 
             
         }
