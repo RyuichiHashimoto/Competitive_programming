@@ -17,7 +17,7 @@ if test $# -eq 1 || test $# -eq 2;then
     txt_file=`echo ${source_file} | rev | cut -c 4- | rev`txt
     
     echo we compile $1 file
-    g++ -o ${outputexe} ${source_file}
+    g++ -g -o ${outputexe} ${source_file}
     RESULT_SIGNAL=$?
     
     if test ${RESULT_SIGNAL} -eq 0; then
@@ -33,7 +33,7 @@ if test $# -eq 1 || test $# -eq 2;then
                     echo ----------------------
                     echo ${txt_file} is found
                     echo ----------------------
-                    ./${outputexe} < ${txt_file}2
+                    ./${outputexe} < ${txt_file}
                     echo 
                 fi
             done
