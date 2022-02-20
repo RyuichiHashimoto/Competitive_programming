@@ -28,17 +28,15 @@ int main(void)
 
     double ret = 0;
     rep(i,1,N){        
-        rep(j,i+1,N){
+        rep(j,1,N){
             int sum=0;
             int all=0;
             
-            rep(k,L[i],R[i]){
-                rep(l,L[j],R[j]){
-                    if (k > l){
-                        sum++;
-                    }
-                    all++;
-                }
+            rep(k,L[j],R[j]){
+                if (  (k > L[i]) && (k <= R[i])){}
+                    sum++;
+
+                all++;
             }
             ret += (double)sum/all;
         }

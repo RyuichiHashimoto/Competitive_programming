@@ -23,7 +23,7 @@ vector<int> LIC(vector<int> &array){
     fill(dp,dp + N,INF);
     
     int cnt = 0;
-    for(int i=0;i<N ;i++){
+    for(int i=0;i<=N ;i++){
         int s = lower_bound(dp, dp + cnt, array[i] ) - dp; 
         dp[s] = array[i];
         ret[i] = s + 1;
