@@ -100,7 +100,7 @@ int main()
         tree.unite(from[i],to[i]);        
     }
     
-if (*(max_element(hindo.begin(),hindo.end())) >2){
+    if (*(max_element(hindo.begin(),hindo.end())) >2){
         cout << "No"<<endl;
     } 
     else {
