@@ -18,6 +18,7 @@ services:
 
     image: hinamimi/atcoder:dev
     container_name: KyoPro
+#    user: 1000:1000
     volumes:    
       - /home/ryuichi/KyoPro:/root/:cached
     command: /bin/sh -c "while sleep 1000; do :; done"
