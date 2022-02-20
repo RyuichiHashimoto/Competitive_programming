@@ -1,3 +1,8 @@
 /.vscode-server/
 /.ssh/
 /.zcompdump
+/.gitignore
+/.bash_history
+/.bashrc
+/.gitconfig
+/.vimrc
