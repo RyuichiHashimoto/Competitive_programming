@@ -59,5 +59,9 @@ ENV PATH $PATH:/home/root/.cargo/bin
 RUN apt-get remove gdb
 RUN apt-get install gdb -y
 
+RUN apt-get install clang-format -y
+
+RUN apt-get install vim -y
+
 WORKDIR /root/problems
 WORKDIR /root/library
