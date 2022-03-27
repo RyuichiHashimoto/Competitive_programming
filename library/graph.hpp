@@ -66,12 +66,12 @@ namespace Dykstra {
 
         int INF = 0x7FFFFFFF;
 
-        if (s < graph.minimum_node_idx || s > graph.maximum_node_idx) {
-            cerr << "There is no such a index: minimum is " << graph.minimum_node_idx << " and maximum is " << graph.maximum_node_idx << endl << "not " << s;
-            exit(1);
-        }
+        // if (s < graph.minimum_node_idx || s > graph.maximum_node_idx) {
+        // cerr << "There is no such a index: minimum is " << graph.minimum_node_idx << " and maximum is " << graph.maximum_node_idx << endl << "not " << s;
+        // exit(1);
+        // }
 
-        vector<int> ret_distance(graph.n_vetrics);
+        vector<int> ret_distance(graph.n_vetrics + 1);
         fill(ret_distance.begin(), ret_distance.end(), INF);
 
         // P: Pair<int, int>
@@ -88,9 +88,7 @@ namespace Dykstra {
 
             int v = p.second;
 
-            rep(i, graph.G[v].size()) {
-                Edge &e = graph.G[v][i];
-
+            for (Edge &e : graph.G[v]) {
                 if (ret_distance[e.to] > ret_distance[e.from] + e.cost) {
 
                     ret_distance[e.to] = ret_distance[e.from] + e.cost;
@@ -441,3 +439,6 @@ namespace SCC {
     }
 
 };  // namespace SCC
+
+
+namespace
