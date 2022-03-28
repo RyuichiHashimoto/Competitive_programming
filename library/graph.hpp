@@ -635,3 +635,51 @@ namespace Prim {
     }
 
 }  // namespace Prim
+
+
+namespace warshall_floyd {
+
+    void add_Edge(Graph &g, int from, int to, int cost) {
+        Edge e = Edge(from, to, 0, cost, 0);
+        g.add_Edge(e);
+    }
+
+
+    vector<vector<ll>> warshall_floyd(Graph &g) {
+        ll LL_MAX_ = 0x7FFFFFFFFFFFFFF;
+        vector<vector<ll>> ret(g.n_vetrics + 1, vector<ll>(g.n_vetrics + 1, LL_MAX_));
+
+        rep(i, 1, g.n_vetrics) {
+            ret[i][i] = 0;
+        }
+
+        rep(i, 1, g.n_vetrics) {
+            for (Edge e : g.G[i]) {
+                ret[e.from][e.to] = e.cost;
+            }
+        }
+
+
+        rep(k, 1, g.n_vetrics) {
+            rep(i, 1, g.n_vetrics) {
+                rep(j, 1, g.n_vetrics) {
+                    if ((ret[i][k] != LL_MAX_) and (ret[k][j] != LL_MAX_)) {
+                        ret[i][j] = min(ret[i][j], ret[i][k] + ret[k][j]);
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    bool has_close_circle(vector<vector<ll>> &distance) {
+        rep(i, 1, distance.size() - 1) {
+            if (distance[i][i] < 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+};  // namespace warshall_floyd
