@@ -38,7 +38,7 @@
 | *Strongly Connected Component (SCC) | 与えられた有効グラフを復数の強連結成分に分解する。           |                    | [典型21](https://atcoder.jp/contests/typical90/tasks/typical90_u) |
 | Prim                                | 与えられた無向グラフの最小全域木を求める手法<br>はじめにランダムにノードを１点選び、その後、選択済のノードから未選択のノードへのエッジの中で、コストが最小のものを選択し続ける手法 | O(\|E\|log \|V\|)  | [Aizu_GRL_2_A](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_2_A&lang=ja) |
 | Kruskal                             | 与えられた無向グラフの最小全域木を求める手法<br/>残っている辺の中からコストが最小の辺 e を取り出す。現在構成中の T に e を加えても閉路ができないなら T に加える。（[引用](https://algo-logic.info/kruskal-mst/)） | log(\|E\|log\|V\|) | [Aizu_GRL_2_A](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_2_A&lang=ja) |
-| warshall-floyd                      |                                                              | O ($n^{3}$)        |                                                              |
+| warshall-floyd                      | 与えられた有効グラフのすべてのノードからその他のすべてのノードへの最短距離を求めるアルゴリズム。 | O ($n^{3}$)        |                                                              |
 
 # tree.hpp
 
