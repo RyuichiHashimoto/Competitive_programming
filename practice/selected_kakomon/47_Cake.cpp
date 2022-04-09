@@ -14,19 +14,14 @@ const ll LL_MAX = 0x7FFFFFFFFFFFFFFF;
 
 #define rep(i, from, to) for (int i = from; i <= (int)(to); i++)
 #define brep(i, num) for (int i = 0; i < (int)(1 << num); i++)
+typedef tuple<int, int, ll, bool> tp;
 
-typedef pair<int, int> P;
+ll dp[2001][2001];
+ll A[2001];
 
-int dp[2001][2001];
-int A[2001];
-void dfs(int a, int b, int s) {
-
-    rep(i, 0, N - 1) {
-        if (A[i] != -1) {
-            if (A[(i - 1 + N) % N] == -1) dp[]
-        }
-    }
+ll dfs(int from, int to) {
 }
+
 
 int main(void) {
 
@@ -38,10 +33,8 @@ int main(void) {
     rep(i, 1, N) {
         cin >> A[i - 1];
     }
+    fill(dp[0], dp[4001], -1);
 
 
-    rep(i, 0, N - 1) {
-        fill(dp[0], dp[2001], -1);
-        dp[i][i] = A[i];
-    }
+    dfs(0, n - 1);
 }

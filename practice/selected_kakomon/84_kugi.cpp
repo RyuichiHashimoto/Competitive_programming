@@ -22,7 +22,6 @@ int main(void) {
 
     cin >> n >> m;
 
-
     vector<vector<int>> triangle(n + 3, vector<int>(n + 3, 0));
     vector<vector<int>> minus_triangle(n + 3, vector<int>(n + 3, 0));
     vector<int> A(m + 1), B(m + 1), C(m + 1);

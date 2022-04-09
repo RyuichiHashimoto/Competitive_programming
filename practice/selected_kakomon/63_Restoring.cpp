@@ -1,4 +1,3 @@
-
 #include <bits/stdc++.h>
 
 #include <cassert>
@@ -57,7 +56,7 @@ int main(void) {
                 continue;
             }
 
-            min_distance = min(min_distance, init[to][k] + init[k][from]);
+            min_distance = min(min_distance, ret[to][k] + ret[k][from]);
         }
 
 
