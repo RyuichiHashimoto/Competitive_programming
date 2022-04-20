@@ -7,23 +7,74 @@ using namespace std;
 
 typedef long long ll;
 
-ll mod_pow(ll x, ll expo, ll mod) {
-    /*
-        return (x  ** expor ) % mod
-    */
+namespace mod_calc {
 
-    ll res = 1;
+    ll mod_pow(ll x, ll expo, ll mod) {
+        /*
+            return (x  ** expor ) % mod
+        */
 
-    while (expo > 0) {
-        if (expo & 1) {
-            res = (res * x) % mod;
+        ll res = 1;
+
+        while (expo > 0) {
+            if (expo & 1) {
+                res = (res * x) % mod;
+            }
+            x = (x * x) % mod;
+
+            expo = expo >> 1;
         }
-        x = (x * x) % mod;
-
-        expo = expo >> 1;
+        return res;
     }
-    return res;
-}
+
+    ll mod_inv(ll x, ll mod) {
+
+        return mod_pow(x, mod - 2, mod);
+    }
+
+    ll kaijou(ll a, ll mod) {
+
+        ll ret = 1;
+        rep(i, 1, a) {
+            ret = (ret * i) % mod;
+        }
+        return ret;
+    };
+
+    ll kaijou_list[200001];
+
+
+    ll conbination_mod(ll n, ll c, ll mod) {
+
+        ll bunsi = kaijou_list[n];
+        ll bunbo1 = kaijou_list[c];
+        ll bunbo2 = kaijou_list[n - c];
+        // ll bunbo2 = 2;
+
+
+        // ll bunsi = kaijou(n, mod);
+        // ll bunbo1 = kaijou(c, mod);
+        // ll bunbo2 = kaijou(n - c, mod);
+        // cout << n << " " << c << ": " << bunsi << " " << bunbo1 << " " << bunbo2 << endl;
+
+
+        ll bunbo1_inv = mod_calc::mod_inv(bunbo1, mod);
+        ll bunbo2_inv = mod_calc::mod_inv(bunbo2, mod);
+
+        return (((bunsi * bunbo1_inv) % mod) * bunbo2_inv) % mod;
+    }
+
+
+    void init_kaijou_list(ll mod) {
+        kaijou_list[0] = 1;
+        kaijou_list[1] = 1;
+        rep(i, 2, 200000) {
+            kaijou_list[i] = (kaijou_list[i - 1] * i) % mod;
+        }
+    }
+
+}  // namespace mod_calc
+
 
 ll pow(ll x, ll n) {
 
@@ -39,6 +90,7 @@ ll pow(ll x, ll n) {
     }
     return ret;
 }
+
 
 namespace prime_number {
 
@@ -139,6 +191,76 @@ namespace prime_number {
     }
 }  // namespace prime_number
 
+
+namespace accumulation {
+
+
+    template <typename T>
+    vector<vector<T>> accumlates_2d(vector<vector<T>> &info) {
+        /*
+            第１列及び第1行は必ず0ベクトルであることが前提
+        */
+        vector<vector<T>> ret(info.size(), vector<T>(info[0].size(), 0));
+        int H = info.size() - 1;
+        int W = info[0].size() - 1;
+        // cerr << " : " << H << " " << W;
+
+        rep(i, 1, H) {
+            rep(j, 1, W) {
+                ret[i][j] = ret[i - 1][j] + ret[i][j - 1] - ret[i - 1][j - 1] + info[i][j];
+            }
+        }
+        return ret;
+    }
+
+    template <typename T>
+    T culmulativesum_2d(vector<vector<T>> &s, int from_x, int from_y, int to_x, int to_y) {
+        /*
+            第１列及び第1行は必ず0ベクトルであることが前提
+        */
+        return s[to_x][to_y] - s[from_x - 1][to_y] - s[to_x][from_y - 1] + s[from_x - 1][from_y - 1];
+    }
+}  // namespace accumulation
+
+namespace gcd_lcd {
+
+    template <typename T>
+    T gcd(T x, T y) {
+        if (x < y) swap(x, y);
+        // xの方が常に大きい
+        T r;
+        while (y > 0) {
+            r = x % y;
+            x = y;
+            y = r;
+        }
+        return x;
+    }
+
+    template <typename T>
+    T lcm(T x, T y) {
+        return T(x / gcd(x, y)) * y;
+    }
+
+    template <typename T>
+    T gcd(vector<T> &array) {
+        T ret = array[0];
+        for (T a : array) {
+            ret = gcd(ret, a);
+        }
+        return ret;
+    }
+
+    template <typename T>
+    T lcm(vector<T> &array) {
+        T ret = array[0];
+        for (T a : array) {
+            ret = lcm(ret, a);
+        }
+        return ret;
+    }
+
+};  // namespace gcd_lcd
 
 int main(void) {
     cout << pow(10, 5);
