@@ -1,8 +1,9 @@
-#include <iostream>
 #include <bits/stdc++.h>
-#include <string>
-#include <set>
+
+#include <iostream>
 #include <map>
+#include <set>
+#include <string>
 
 #define rep(i, n) for (int i = 0; i < (int)(n); i++)
 
@@ -10,151 +11,141 @@ using namespace std;
 
 typedef long long ll;
 
-class edge
-{
-public:
-   int from; // start of an edge.
-   int to;   // end of an edge.
-   ll cap;  // the capacity for pass through
-   ll cost; // the cost to pass through (for finding the minimum cost flow)
-   ll rev;  // the index of the inverse edge.
+typedef pair<ll, ll> P;
 
-   edge(int _from, int _to, ll _cap, ll _cost, ll _rev)
-   {
-      from = _from;
-      to = _to;
-      cap = _cap;
-      cost = _cost;
-      rev = _rev;
-   }
+class Edge {
+  public:
+    int from;  // start of anEdge.
+    int to;    // end of anEdge.
+    int cap;   // the capacity for pass through
+    ll cost;   // the cost to pass through (for finding the minimum cost flow)
+    int rev;   // the index of the inverseEdge.
+
+    Edge(int _from, int _to, int _cap, ll _cost, int _rev) {
+        from = _from;
+        to = _to;
+        cap = _cap;
+        cost = _cost;
+        rev = _rev;
+    }
 };
 
-class Graph
-{
-public:
-   vector<vector<edge>> G;
-   int minimum_node_idx;
-   int maximum_node_idx;
-   ll n_vetrics;
+class Graph {
+  public:
+    vector<vector<Edge>> G;
+    int minimum_node_idx;
+    int maximum_node_idx;
+    int n_vetrics;
 
-   Graph(ll n_of_vetrics)
-   {
-      G.resize(n_of_vetrics + 1);
-      n_vetrics = n_of_vetrics;
-      minimum_node_idx = 0x7FFFFFFF;
-      maximum_node_idx = 0x80000000;
-   }
+    Graph(int n_of_vetrics) {
+        G.resize(n_of_vetrics + 1);
+        n_vetrics = n_of_vetrics;
+        minimum_node_idx = 0x7FFFFFFF;
+        maximum_node_idx = 0x80000000;
+    }
 
-   void add_edge(edge &x)
-   {
-      G[x.from].push_back(x);
-      minimum_node_idx = min(minimum_node_idx, x.from);
-      minimum_node_idx = min(minimum_node_idx, x.to);
-      maximum_node_idx = max(maximum_node_idx, x.from);
-      maximum_node_idx = max(maximum_node_idx, x.to);
-   }
+    void add_Edge(Edge &x) {
+        G[x.from].push_back(x);
+        minimum_node_idx = min(minimum_node_idx, x.from);
+        minimum_node_idx = min(minimum_node_idx, x.to);
+        maximum_node_idx = max(maximum_node_idx, x.from);
+        maximum_node_idx = max(maximum_node_idx, x.to);
+    }
 
-   int get_rank(ll idx)
-   {
-      return G[idx].size();
-   }
+    int get_rank(int idx) {
+        return G[idx].size();
+    }
 };
 
 
-namespace Dykstra
-{
+namespace Dykstra {
 
-   typedef pair<int, ll> P;
+    void add_Edge(Graph &graph, int from, int to, ll cost) {
+        Edge e(from, to, 0, cost, 0);
+        graph.add_Edge(e);
+    }
 
-   void add_edge(Graph &graph, int from, int to, ll cost)
-   {
-      edge e(from, to, 0, cost, 0);
-      graph.add_edge(e);
-   }
-
-   vector<ll> Dykstra(Graph &graph, int s)
-   {
-      /*  
+    vector<ll> Dykstra(Graph &graph, int s) {
+        /*
         s:  start idx;
-      */
+        */
 
-      ll INF = 0x7FFFFFFFFFFFFFFF;
+        ll INF = 0x7FFFFFFFFFFFFFFF;
 
-      if (s < graph.minimum_node_idx || s > graph.maximum_node_idx)
-      {
-         cerr << "There is no such a index: minimum is " << graph.minimum_node_idx << " and maximum is " << graph.maximum_node_idx << endl
-              << "not " << s;
-         exit(1);
-      }
+        // if (s < graph.minimum_node_idx || s > graph.maximum_node_idx) {
+        // cerr << "There is no such a index: minimum is " << graph.minimum_node_idx << " and maximum is " << graph.maximum_node_idx << endl << "not " << s;
+        // exit(1);
+        // }
 
-      vector<ll> ret_distance(graph.n_vetrics);
-      fill(ret_distance.begin(), ret_distance.end(), INF);
+        vector<ll> ret_distance(graph.n_vetrics + 1);
+        fill(ret_distance.begin(), ret_distance.end(), INF);
 
-      // P: Pair<int, int>
-      //    first ll: metrics(e.g., cost, distance)
-      //    second int: index of the node;
-      priority_queue<P, vector<P>, greater<P>> que;
+        // P: Pair<int, int>
+        //    first int: metrics(e.g., cost, distance)
+        //    second int: index of the node;
+        priority_queue<P, vector<P>, greater<P>> que;
 
-      ret_distance[s] = 0;
-      que.push(P(0ll, s));
+        ret_distance[s] = 0;
+        que.push(P(0, s));
 
-      while (!que.empty())
-      {
-         P p = que.top();
-         que.pop();
+        while (!que.empty()) {
+            P p = que.top();
+            que.pop();
 
-         int v = p.second;
+            int v = p.second;
 
-         rep(i, graph.G[v].size())
-         {
-            edge &e = graph.G[v][i];
+            for (Edge &e : graph.G[v]) {
 
-            if (ret_distance[e.to] > ret_distance[e.from] + e.cost)
-            {
 
-               ret_distance[e.to] = ret_distance[e.from] + e.cost;
-               que.push(P(ret_distance[e.to], e.to));
+                if (ret_distance[e.to] > ret_distance[e.from] + e.cost) {
+
+                    ret_distance[e.to] = ret_distance[e.from] + e.cost;
+                    que.push(P(ret_distance[e.to], e.to));
+                }
             }
-         }
-      }
+        }
 
-      return ret_distance;
-   }
-}
-int main()
-{
-   int N,M;
+        return ret_distance;
+    }
+}  // namespace Dykstra
 
-   cin >> N >> M;
+int main() {
+    int N, M;
 
-   vector<ll> H(N+1);
+    cin >> N >> M;
 
-   rep(i,N){
-      cin >> H[i+1];
-   }
-   Graph graph(N + 1);
+    vector<ll> H(N + 1);
 
-   rep(i, M)
-   {
-     
-      int tmp1, tmp2;
-      cin >> tmp1 >> tmp2;
+    rep(i, N) {
+        cin >> H[i + 1];
+    }
+    ll pot = 1E9 + 1;
 
-      if (H[tmp1] < H[tmp2]){
-         Dykstra::add_edge(graph, tmp1, tmp2, -1 * (H[tmp2] - H[tmp1]));
-         Dykstra::add_edge(graph, tmp2, tmp1, -2*(H[tmp1] - H[tmp2]));
-      }
-      else if (H[tmp1] > H[tmp2]){
-         Dykstra::add_edge(graph, tmp1, tmp2, -2 * (H[tmp1] - H[tmp2]));
-         Dykstra::add_edge(graph, tmp2, tmp1, -1 * (H[tmp2] - H[tmp1]));
-      } else {
-         Dykstra::add_edge(graph, tmp1, tmp2, (0));
-         Dykstra::add_edge(graph, tmp2, tmp1, (0));
-      }
-   }
-   /*
-   vector<ll> s = Dykstra::Dykstra(graph,1);
+    Graph graph(N);
 
-   cout << (*max_element(s.begin(),s.end())) * -1;
-   */
+    rep(i, M) {
+
+        int tmp1, tmp2;
+        cin >> tmp1 >> tmp2;
+
+        if (H[tmp1] < H[tmp2]) {
+            Dykstra::add_Edge(graph, tmp1, tmp2, -1 * (H[tmp2] - H[tmp1]) + 2 * H[tmp1]);
+            Dykstra::add_Edge(graph, tmp2, tmp1, -1 * (H[tmp1] - H[tmp2]) + 2 * H[tmp2]);
+        } else if (H[tmp1] > H[tmp2]) {
+            Dykstra::add_Edge(graph, tmp1, tmp2, -2 * (H[tmp2] - H[tmp1]) + 2 * H[tmp1]);
+            Dykstra::add_Edge(graph, tmp2, tmp1, -1 * (H[tmp1] - H[tmp2]) + 2 * H[tmp2]);
+        } else {
+            Dykstra::add_Edge(graph, tmp1, tmp2, (0));
+            Dykstra::add_Edge(graph, tmp2, tmp1, (0));
+        }
+    }
+    vector<ll> s = Dykstra::Dykstra(graph, 1);
+
+
+    for (int i = 1; i <= 4; i++) {
+        cout << s[i] + 2 * H[i] - 2 * H[1] << " ";
+    }
+
+
+    //  cout << (*max_element(s.begin(), s.end()));
 }

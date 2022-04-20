@@ -51,39 +51,12 @@ int main(void) {
     cin >> S >> Q;
 
 
+    vector<pair<int, pair<int, int>>> query(Q);
     rep(i, 1, Q) {
         ll a, b;
         cin >> a >> b;
 
-        char init;
-        int roop = -1;
-        if (a >= 63) {
-            init = S[0];
-            roop = 64;
-        } else {
-            init = S[(b - 1) / pow_(2, a)];
-            roop = a;
-        }
-        cout << "init:" << init << endl;
-        ll s = b;
-        s -= 1;
-        int current = init - 'A';
-
-
-        cout << b << " " << b % 3 << endl;
-        display(s);
-        for (ll i = 0; i < roop; i++) {
-
-            int idx = ((s >> (roop - i - 1)) & 1ll);
-            cout << idx;
-            if (idx == 1) {
-                current = (current + 2) % 3;
-            } else {
-                current = (current + 1) % 3;
-            }
-        }
-        char ans = current + 'A';
-        cout << endl;
-        cout << ans << endl;
+        pair<int, pair<int, int>> q(i - 1, pair<int, int>{a, b});
+        query[i - 1] = q;
     }
 }
