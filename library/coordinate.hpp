@@ -16,7 +16,7 @@ vector<T> compress(vector<T> &X) {
     sort(vals.begin(), vals.end());
     vals.erase(unique(vals.begin(), vals.end()), vals.end());
 
-    for (int i = 0; i < (int)vals.size(); i++) {
+    for (int i = 0; i < (int)X.size(); i++) {
         X[i] = lower_bound(vals.begin(), vals.end(), X[i]) - vals.begin();
     }
     return vals;
@@ -36,7 +36,7 @@ vector<T> compress(vector<vector<T>> coord) {
 
     int N = coord.size();
     int dx[] = {0, 1};
-    int dx[] = {1, 0};
+    int dy[] = {1, 0};
     for (int i = 0; i < N; i++) {
         for (int i = 0; i < 2; i++) {
             vector<T> point(2);
@@ -45,24 +45,24 @@ vector<T> compress(vector<vector<T>> coord) {
             ret.push_back(point);
         }
     }
-}
-N = ret.size();
-vector<T> X(ret), Y(ret);
-for (int i = 0; i < N; i++) {
-    X[i] = ret[i][0];
-    Y[i] = ret[i][1];
-}
 
-compress(T)
+    N = ret.size();
+    vector<T> X(ret), Y(ret);
+    for (int i = 0; i < N; i++) {
+        X[i] = ret[i][0];
+        Y[i] = ret[i][1];
+    }
+
+    compress(T);
 
     sort(X.begin(), vals.end());
-vals.erase(unique(vals.begin(), vals.end()), vals.end());
+    vals.erase(unique(vals.begin(), vals.end()), vals.end());
 
-// 隣り合う重複を削除(unique), 末端のゴミを削除(erase)
+    // 隣り合う重複を削除(unique), 末端のゴミを削除(erase)
 
-for (int i = 0; i < N; i++) {
-    C1[i] = lower_bound(vals.begin(), vals.end(), C1[i]) - vals.begin();
-    C2[i] = lower_bound(vals.begin(), vals.end(), C2[i]) - vals.begin();
-}
-return vals;
+    for (int i = 0; i < N; i++) {
+        C1[i] = lower_bound(vals.begin(), vals.end(), C1[i]) - vals.begin();
+        C2[i] = lower_bound(vals.begin(), vals.end(), C2[i]) - vals.begin();
+    }
+    return vals;
 }
