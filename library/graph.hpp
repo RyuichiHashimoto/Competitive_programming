@@ -87,6 +87,9 @@ namespace Dykstra {
             que.pop();
 
             int v = p.second;
+            if (ret_distance[v] != p.first) {
+                continue;
+            }
 
             for (Edge &e : graph.G[v]) {
                 if (ret_distance[e.to] > ret_distance[e.from] + e.cost) {
@@ -99,7 +102,78 @@ namespace Dykstra {
 
         return ret_distance;
     }
+
+
 }  // namespace Dykstra
+
+
+// すべてのノードのコストが1 or 0であればTrue
+// True: 全ノードのコストが1のみ or 0のみ
+bool validate_noCost_Edge(Graph &g) {
+    bool zero_weight_found = false;
+    bool one_weight_found = false;
+
+    for (int i = 0; i <= g.n_vetrics; i++) {
+        for (auto e : g.G[i]) {
+            if (e.cost == 0) {
+                zero_weight_found = true;
+            } else if (e.cost == 1) {
+                one_weight_found = true;
+            } else {
+                return false;
+            }
+        }
+    }
+    return zero_weight_found ^ one_weight_found;
+}
+
+vector<int> find_shortest_path(Graph &g, int start_point, int end_point) {
+    if (!validate_noCost_Edge(g)) {
+        exit(-1);
+    }
+
+    vector<bool> used(g.n_vetrics + 1);
+    vector<int> before(g.n_vetrics + 1, false);
+
+
+    queue<int> que;
+
+    que.push(start_point);
+    used[start_point] = true;
+    bool find_flag = false;
+
+    while (!que.empty()) {
+        int id = que.front();
+        que.pop();
+        for (auto e : g.G[id]) {
+            if (used[e.to]) continue;
+
+            used[e.to] = true;
+            before[e.to] = e.from;
+            que.push(e.to);
+
+            if (e.to == end_point) {
+                find_flag = true;
+                break;
+            }
+        }
+    }
+    if (!find_flag) return vector<int>(0);
+
+
+    vector<int> shortest_path;
+    int id = end_point;
+    shortest_path.push_back(id);
+    while (id != start_point) {
+        id = before[id];
+        shortest_path.push_back(id);
+    }
+
+    reverse(shortest_path.begin(), shortest_path.end());
+
+    return shortest_path;
+}
+
 
 vector<int> get_dist(Graph &graph, int start) {
     vector<int> ret(graph.n_vetrics + 1);
@@ -553,7 +627,6 @@ namespace Kruskal {
 }  // namespace Kruskal
 
 namespace Prim {
-
     // Graph class形式のデータを与えて、その最小全域木を返す。
     // 無向グラフを想定しており、有効グラフは想定していない。
     //
@@ -680,6 +753,4 @@ namespace warshall_floyd {
         }
         return false;
     }
-
-
 };  // namespace warshall_floyd
