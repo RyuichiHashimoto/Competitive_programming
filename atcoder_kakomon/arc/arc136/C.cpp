@@ -28,4 +28,7 @@ int main(void) {
     rep(i, 0, N - 1) {
         array[i] -= minimum;
     }
+    
+
+
 }

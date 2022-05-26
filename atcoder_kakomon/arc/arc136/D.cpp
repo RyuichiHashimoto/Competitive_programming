@@ -44,11 +44,13 @@ int main(void) {
 
 
     int counter = 0;
+    rep(i,0,)
+
+    
+
 
     rep(i, 0, small_str.size() - 1) {
-        int s_c = small_str[i] - '0';
-        cout << s_c << " " << big_counts[9 - s_c] << endl;
-
+        int s_c = small_str[i] - '0';        
         if (counter == 0) {
             if (big_counts[10 - s_c] != 0) {
                 big_counts[10 - s_c]--;

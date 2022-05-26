@@ -74,7 +74,6 @@ int main() {
         dp[i][other] += dp[i - 1][near_y] * (H - 1);
         dp[i][other] %= mod;
         dp[i][other] += (dp[i - 1][other] * (H - 2 + W - 2)) % mod;
-
         dp[i][other] %= mod;
         //   dp[i][other] += (s * (W - 2)) % mod;
 

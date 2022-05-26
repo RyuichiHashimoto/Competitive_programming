@@ -193,79 +193,147 @@ namespace SCC {
 
 };  // namespace SCC
 
-typedef long long ll;
 
-template <typename T>
-vector<T> compress(vector<T> &X) {
+bool check_lines(ll _x, ll _y, ll A, ll B, ll C) {
+    ll x = _x;
+    ll y = _y;
 
-    vector<T> vals = X;
+    int no_flag = 0;
+    ll rest = x;
 
-    sort(vals.begin(), vals.end());
-    vals.erase(unique(vals.begin(), vals.end()), vals.end());
-
-    for (int i = 0; i < (int)X.size(); i++) {
-        X[i] = lower_bound(vals.begin(), vals.end(), X[i]) - vals.begin();
+    if (A <= rest * y) {
+        ll height = (A + y - 1) / y;
+        rest -= height;
+    } else {
+        no_flag = 1;
     }
-    return vals;
+
+    if (B <= rest * y) {
+        ll height = (B + y - 1) / y;
+        rest -= height;
+    } else {
+        no_flag = 1;
+    }
+
+    if (C <= rest * y) {
+        ll height = (C + y - 1) / y;
+        rest -= height;
+    } else {
+        no_flag = 1;
+    }
+
+
+    return no_flag == 0;
 }
 
-struct info {
-    ll val, x, y, idx, ans;
-};
+bool check_two(ll _x, ll _y, ll A, ll B, ll C) {
+    ll x = _x;
+    ll y = _y;
 
-bool comparator(const info &one, const info &two) {
-    return one.val > two.val;
-}
-bool comparator_idx(const info &one, const info &two) {
-    return one.idx < two.idx;
+    int no_flag = 0;
+    ll rest = x;
+
+    if (A <= rest * y) {
+        ll height = (A + y - 1) / y;
+        rest -= height;
+    } else {
+        no_flag = 1;
+    }
+
+    swap(rest, y);
+
+    if (B <= rest * y) {
+        ll height = (B + y - 1) / y;
+        rest -= height;
+    } else {
+        no_flag = 1;
+    }
+
+    if (C <= rest * y) {
+        ll height = (C + y - 1) / y;
+        rest -= height;
+    } else {
+        no_flag = 1;
+    }
+    return no_flag == 0;
 }
 
 int main() {
+    ll x, y, A, B, C;
 
-    int H, W, N;
-    cin >> H >> W >> N;
+    cin >> x >> y >> A >> B >> C;
 
-    vector<info> ar(N);
-    vector<ll> x(N), y(N), val(N);
-
-    map<int, vector<info>> st;
-
-    vector<info> ret;
-    rep(i, 0, N - 1) {
-        cin >> x[i] >> y[i] >> val[i];
-        info as;
-        as.x = x[i];
-        as.y = y[i];
-        as.val = val[i];
-        as.idx = i;
-        as.ans = -1;
-        st[val[i]].push_back(as);
-        ret.push_back(as);
+    if (x > y) {
+        swap(x, y);
     }
 
-    int MAX_E = 2E5 + 1;
-    ll x_line_ans[MAX_E];
-    ll y_line_ans[MAX_E];
 
-    ll ans[MAX_E];
-    fill(x_line_ans, x_line_ans + MAX_E, 0);
-    fill(y_line_ans, y_line_ans + MAX_E, 0);
-    fill(ans, ans + MAX_E, 0);
-    for (auto it = st.rbegin(); it != st.rend(); it++) {
+    if (check_lines(x, y, A, B, C)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+    // return 1;
 
-        for (auto vec : it->second) {
-            vec.ans = max(x_line_ans[vec.x], y_line_ans[vec.y]);
-            ret[vec.idx].ans = vec.ans;
-        }
-        for (auto vec : it->second) {
-            x_line_ans[vec.x] = max(x_line_ans[vec.x], ret[vec.idx].ans + 1);
-            y_line_ans[vec.y] = max(y_line_ans[vec.y], ret[vec.idx].ans + 1);
-        }
+    if (check_lines(y, x, A, B, C)) {
+        cout << "Yes" << endl;
+        return 0;
     }
 
-    rep(i, 0, N - 1) {
-        cout << ret[i].ans << endl;
+
+    if (check_two(x, y, A, B, C)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+    if (check_two(x, y, A, C, B)) {
+        cout << "Yes" << endl;
+        return 0;
     }
 
-    return 0;
+    if (check_two(x, y, B, A, C)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+    if (check_two(x, y, B, C, A)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+
+    if (check_two(x, y, C, A, B)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+    if (check_two(x, y, C, B, A)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+
+
+    if (check_two(y, x, A, B, C)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+    if (check_two(y, x, A, C, B)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+
+    if (check_two(y, x, B, A, C)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+    if (check_two(y, x, B, C, A)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+
+    if (check_two(y, x, C, A, B)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+    if (check_two(y, x, C, B, A)) {
+        cout << "Yes" << endl;
+        return 0;
+    }
+
+    cout << "No" << endl;
 }

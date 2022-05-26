@@ -21,5 +21,9 @@ int main(void) {
         cin >> n >> name;
 
         vector<int> s(n / 2 + 2);
+        
+
+
+
     }
 }

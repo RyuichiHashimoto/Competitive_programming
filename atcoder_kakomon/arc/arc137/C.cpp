@@ -27,5 +27,12 @@ int main(void) {
         cin >> A[i - 1];
     }
 
-    sort(A.begin(), A.end());
+    rep(i,1,N){
+        
+    }
+
+
+
+
+
 }
