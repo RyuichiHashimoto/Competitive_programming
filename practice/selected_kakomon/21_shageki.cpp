@@ -43,8 +43,6 @@ int main(void) {
         }
         sort(X.begin(), X.end());
 
-        int t;
-
         rep(i, 0, N - 1) {
             if (X[i] < i) {
                 is_suit = false;

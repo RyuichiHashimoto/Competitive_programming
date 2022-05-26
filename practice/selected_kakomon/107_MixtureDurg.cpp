@@ -25,6 +25,14 @@ int main(void) {
 
     int N, M;
 
+    cin >> N;
+
+    rep(i,1,n){
+        
+    }
+
+
+
 
     return 0;
 }

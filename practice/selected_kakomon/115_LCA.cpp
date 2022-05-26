@@ -252,6 +252,8 @@ int main(void) {
 
     vector<vector<int>> nex = tree::doubling(tree);
 
+    
+
 
     return 0;
 }

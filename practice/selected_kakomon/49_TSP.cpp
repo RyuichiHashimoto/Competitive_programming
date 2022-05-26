@@ -69,7 +69,6 @@ int main(void) {
     int V, E;
     cin >> V >> E;
     fill(dp[0], dp[1 << 15 + 1], INT_MAX / 100);
-
     fill(tsp[0], tsp[16], -1);
 
     rep(i, 1, E) {

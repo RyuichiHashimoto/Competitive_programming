@@ -109,7 +109,7 @@ int main(void) {
         pair<int, int> P = sta.top();
         sta.pop();
         if (P.first == 0) {
-            cout << P.first << " " << P.second << endl;
+            // cout << P.first << " " << P.second << endl;
             ret += P.second;
         } else {
             // cout << P.first << " " << P.second << endl;

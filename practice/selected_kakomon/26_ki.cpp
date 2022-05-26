@@ -172,7 +172,6 @@ void dfs(tree::tree<int> &tre, int id) {
 
     for (int child_id : tre.nodes[id].childlen) {
         tre.values[child_id] += tre.values[id];
-
         dfs(tre, child_id);
     }
 }
@@ -193,7 +192,6 @@ int main(void) {
     tree::tree<int> tree(N);
 
     tree::connect_nodes(tree, 1, relations);
-
 
     rep(i, 1, Q) {
         int a, b;

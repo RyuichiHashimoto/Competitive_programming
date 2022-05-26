@@ -15,6 +15,7 @@ const ll LL_MAX = 0x7FFFFFFFFFFFFFFF;
 #define rep(i, from, to) for (int i = from; i <= (int)(to); i++)
 #define brep(i, num) for (int i = 0; i < (int)(1 << num); i++)
 
+typedef pair<int, int> P;
 
 int dp[101][101];
 int A[101], B[101];
