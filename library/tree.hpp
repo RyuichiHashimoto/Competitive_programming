@@ -230,6 +230,58 @@ namespace tree {
 };  // namespace tree
 
 
+class Union_Find_union {
+  private:
+    vector<int> par;
+    vector<int> rank;
+
+  public:
+    Union_Find(int size) {
+        par = new int[size];
+        rank = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            par[i] = i;
+            rank[i] = 0;
+        }
+    }
+
+    ~Union_Find() {
+        delete par;
+        delete rank;
+    }
+
+    int root(int x) {
+        if (par[x] == x) {
+            return x;
+        } else {
+            par[x] = root(par[x]);
+            return par[x];
+        }
+    }
+
+    void unite(int x, int y) {
+        x = root(x);
+        y = root(y);
+
+        if (x == y) return;
+
+        if (rank[x] < rank[y]) {
+            par[x] = y;
+        } else {
+            par[y] = x;
+            if (rank[x] == rank[y]) {
+                rank[x]++;
+            }
+        }
+    }
+
+    bool same(int x, int y) {
+        return root(x) == root(y);
+    }
+};
+
+
 class Union_Find {
   private:
     int *par;
@@ -896,55 +948,44 @@ namespace lazySegmentTree {
     };
 }  // namespace lazySegmentTree
 
+
 // binary indexed tree
-namespace BIT {
+// 1-indexed
+namespace fenwicktree {
 
-    typedef long long ll;
 
-
-    class BIT {
+    template <class T>
+    class fenwicktree {
       private:
-        int n_leafs;
         int n_data;
-        vector<ll> array;
+        std::vector<T> array;
 
-      public:
-        BIT(int n) {
-            n_leafs = 1;
-            n_data = n;
-            while (n_leafs < n_data) {
-                n_leafs *= 2;
-            }
-            array.resize(n_leafs);
-            fill(array.begin(), array.end(), 0);
-        }
-
-        // 1-indexed
-        // a[0] + a[1] + ... + a[i]を返す
-        ll __sum_sub(int i) {
-            if (i == 0) return 0;
-            ll s = 0;
-            for (int k = i; k > 0; k -= (k & -k)) {
-                s += array[k];
+        T _internal_sum(int r) {
+            T s = 0;
+            while (r > 0) {
+                s += array[r];
+                r -= r & -r;
             }
             return s;
         }
 
-        // 1-indexed
-        // a[from] + a[1] + ... + a[to]を返す
-        ll sum(int from, int to) {
-            return __sum_sub(to) - __sum_sub(from - 1);
-        }
 
-        // 1-indexed
-        void add(int i, ll x) {
-            if (i == 0) return;
+      public:
+        fenwicktree(int n) : n_data(n), array(n + 1){};
 
-            for (int k = i; k <= n_leafs; k += (k & -k)) {
-                array[k] += x;
+        // 0-indexed
+        void add(int p, T x) {
+            assert(1 <= p && p <= n_data);
+            while (p <= n_data) {
+                array[p] += x;
+                p += p & -p;
             }
         }
+
+        // [l, r]のsum
+        T sum(int l, int r) {
+            assert(1 <= l && l <= r && r <= n_data);
+            return _internal_sum(r) - _internal_sum(l - 1);
+        }
     };
-
-
-};  // namespace BIT
+};  // namespace fenwicktree
