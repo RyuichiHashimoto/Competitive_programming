@@ -230,7 +230,6 @@ namespace tree {
 };  // namespace tree
 
 
-
 class Union_Find {
   private:
     int *par;
@@ -282,328 +281,72 @@ class Union_Find {
     }
 };
 
-namespace segment_tree {
 
-    typedef long long ll;
+namespace segtree {
 
-    class range_max {
+    int ceil_pow2(int n) {
+        int x = 0;
+        while ((1U << x) < (unsigned int)(n)) x++;
+        return x;
+    }
+
+    template <class S, S (*op)(S, S), S (*e)()>
+    struct segtree {
       private:
-        vector<ll> dat;    // segment tree本体
-        vector<ll> cache;  // キャッシュ
-
-        int n_leafs;  //最終ノードの数
-                      //(完全２部木のため、n_leafsは2の累乗個作成し)
-        int n_data;   // データ数
-        const ll WORST_VALUE = 0x8000000000000000;
-
-        ll compare(ll a, ll b) {
-            return max(a, b);
-        }
-
-        /*
-                キャッシュの情報をk番目のノードに代入する。
-                キャッシュの情報をsegment treeに
-            */
-        void push(int k) {
-            // 葉以外のノードを指定した場合、
-            if (k < n_leafs) {
-                cache[2 * k + 1] = compare(cache[k], cache[k * 2 + 1]);
-                cache[2 * k + 2] = compare(cache[k], cache[k * 2 + 2]);
-            }
-            dat[k] = compare(cache[k], dat[k]);
-            cache[k] = 0;
-        }
-
-        /*
-                [left, right)の範囲を値xで塗り替える。
-
-            */
-        void __update(int left, int right, ll x, int k, int l, int r) {
-            push(k);
-
-            //更新範囲にかすってもいない場合、何もしない。
-            if (r <= left || right <= l) {
-                return;
-            }
-
-            //現在見ている範囲[l, r]が更新範囲を完全に覆っている場合
-            if (left <= l && r <= right) {
-                cache[k] = x;
-                push(k);
-                return;
-            }
-
-            __update(left, right, x, 2 * k + 1, l, (l + r) >> 1);
-            __update(left, right, x, 2 * k + 2, (l + r) >> 1, r);
-            dat[k] = compare(dat[k * 2 + 1], dat[2 * k + 2]);
-        }
-
-        /*
-            完全2部木のルートノードから順に見て、[left,
-           right)の範囲で最良値を求める。
-
-            k：節点の番号
-            [l , r): その節点を見ている範囲
-        */
-        ll __query(int left, int right, int k, int l, int r) {
-            push(k);
-            if (left >= r || right <= l) {
-                return WORST_VALUE;
-            }
-            if (left <= l && r <= right) {
-                return dat[k];
-            } else {
-                ll vl = __query(left, right, k * 2 + 1, l, (l + r) >> 1);
-                ll vr = __query(left, right, k * 2 + 2, (l + r) >> 1, r);
-                return compare(vl, vr);
-            }
+        int _n, size, log;
+        std::vector<S> d;
+        void update(int k) {
+            d[k] = op(d[2 * k], d[2 * k + 1]);
         }
 
       public:
-        void init(int N) {
-            n_leafs = 1;
-            n_data = N;
+        segtree() : segtree(0) {
+        }
+        explicit segtree(int n) : segtree(std::vector<S>(n, e())){};
+        explicit segtree(const std::vector<S> &v) : _n(int(v.size())) {
+            log = ceil_pow2(_n);
+            size = 1 << log;
 
-            while (n_leafs < n_data) {
-                n_leafs *= 2;
+            d = std::vector<S>(2 * size, e());
+            for (int i = 0; i < _n; i++) d[size + i] = v[i];
+            for (int i = size - 1; i >= 1; i--) {
+                update(i);
             }
-            dat.resize(2 * n_leafs);
-            cache.resize(2 * n_leafs);
         }
 
-        segment_tree_for_maximum() {
-            dat.clear();
-            cache.clear();
+        void set(int p, S x) {
+            assert(0 <= p && p < _n);
+            p += size;
+            d[p] = x;
+            for (int i = 1; i <= log; i++) update(p >> i);
         }
 
-        /*
-                [left,right)の最良値を返す。
-            */
-        ll query(int left, int right) {
-            return __query(left, right, 0, 0, n_leafs);
+        S get(int p) {
+            assert(0 <= p && p < _n);
+            return d[p + size];
         }
 
-        /*
-                [left,right)の最良値を返す。
-            */
-        ll query(int left, int right) {
-            return __query(left, right, 0, 0, n_leafs);
+        // [l, r)
+        S prod(int l, int r) const {
+            assert(0 <= l && l <= r && r <= _n);
+            S sml = e(), smr = e();
+            l += size;
+            r += size;
+
+            while (l < r) {
+                if (l & 1) sml = op(sml, d[l++]);
+                if (r & 1) smr = op(d[--r], smr);
+                l >>= 1;
+                r >>= 1;
+            }
+            return op(sml, smr);
         }
-        /*
-                [left,right)の要素をxにする。
-            */
-        void update(int left, int right, ll x) {
-            return __update(left, right, x, 0, 0, n_leafs);
+        S all_prod() const {
+            return d[1];
         }
     };
 
-
-    // 区間加算の区間和セグメントツリー
-    template <typename T>
-    class range_sum_query {
-
-      private:
-        int n_leafs;
-        int n_data;
-        int n_nodes;
-        vector<T> nodes;
-        T inf = -1;
-
-
-      public:
-        // 1-indexed
-        // array: {0, a1, a2, a3, a4, .., an};
-        range_sum_query(vector<ll> &array, T worst_val) {
-
-            n_data = array.size();
-            inf = worst_val;
-
-            // 完全２部木のため、葉は2のべき乗数
-            n_leafs = 1;
-
-
-            do {
-                n_leafs *= 2;
-            } while (n_data > n_leafs);
-
-
-            n_nodes = n_leafs * 2 - 1;
-
-            nodes.resize(n_nodes + 1);
-            fill(nodes.begin(), nodes.end(), inf);
-
-            for (int i = 1; i < n_data; i++) {
-                nodes[n_leafs + i - 1] = array[i];
-            }
-            for (int i = n_leafs - 1; i >= 1; i--) {
-                nodes[i] = comparator(nodes[2 * i + 1], nodes[2 * i]);
-            }
-        }
-
-        void update(int idx, T value) {
-            idx += n_leafs - 1;
-            nodes[idx] = value;
-
-            while (idx > 1) {
-                idx /= 2;
-                nodes[idx] = comparator(nodes[2 * idx], nodes[2 * idx + 1]);
-            }
-        }
-
-        void add(int idx, T value) {
-            idx += n_leafs - 1;
-            nodes[idx] += value;
-
-            while (idx > 1) {
-                idx /= 2;
-                nodes[idx] = comparator(nodes[2 * idx], nodes[2 * idx + 1]);
-            }
-        }
-
-        T comparator(T one, T two) {
-            return min(one, two);
-            // return min(one, two);
-        }
-
-        // [from, to]間で最適のものを抽出する。
-        T query(int from, int to) {
-            return __query(from, to, 1, 1, n_leafs);
-        }
-
-
-        T __query(int from, int to, int idx, int a, int b) {
-            // 全く重なっていない場合
-            if (from > b || to < a) {
-                return inf;
-            }
-
-            // 完全に覆いかぶさっている場合
-            if ((from < a) && (b < to)) {
-                return nodes[idx];
-            }
-
-            if (a == b) {
-                return nodes[idx];
-            }
-
-
-            T vl = __query(from, to, idx * 2, a, (a + b) / 2);
-            T vr = __query(from, to, idx * 2 + 1, (a + b) / 2 + 1, b);
-            return comparator(vl, vr);
-        }
-
-        void display_nodes() {
-            for (auto s : nodes) {
-                cout << s << " ";
-            }
-            cout << endl;
-        }
-    };
-
-
-    template <typename T>
-    class range_min_query {
-
-      private:
-        int n_leafs;
-        int n_data;
-        int n_nodes;
-        vector<T> nodes;
-        T inf = -1;
-
-
-      public:
-        // 1-indexed
-        // array: {0, a1, a2, a3, a4, .., an};
-        range_min_query(vector<ll> &array, T worst_val) {
-
-            n_data = array.size();
-            inf = worst_val;
-
-            // 完全２部木のため、葉は2のべき乗数
-            n_leafs = 1;
-
-
-            do {
-                n_leafs *= 2;
-            } while (n_data > n_leafs);
-
-
-            n_nodes = n_leafs * 2 - 1;
-
-            nodes.resize(n_nodes + 1);
-            fill(nodes.begin(), nodes.end(), inf);
-
-            for (int i = 1; i < n_data; i++) {
-                nodes[n_leafs + i - 1] = array[i];
-            }
-            for (int i = n_leafs - 1; i >= 1; i--) {
-                nodes[i] = comparator(nodes[2 * i + 1], nodes[2 * i]);
-            }
-        }
-
-        void update(int idx, T value) {
-            idx += n_leafs - 1;
-
-            nodes[idx] = value;
-
-            while (idx > 1) {
-                idx /= 2;
-                nodes[idx] = comparator(nodes[2 * idx], nodes[2 * idx + 1]);
-            }
-        }
-
-        void add(int idx, T value) {
-            idx += n_leafs - 1;
-            nodes[idx] += value;
-
-            while (idx > 1) {
-                idx /= 2;
-                nodes[idx] = comparator(nodes[2 * idx], nodes[2 * idx + 1]);
-            }
-        }
-
-        T comparator(T one, T two) {
-            return one + two;
-            // return min(one, two);
-        }
-
-        // [from, to]間で最適のものを抽出する。
-        T query(int from, int to) {
-            return __query(from, to, 1, 1, n_leafs);
-        }
-
-
-        T __query(int from, int to, int idx, int a, int b) {
-            // 全く重なっていない場合
-            if (from > b || to < a) {
-                return inf;
-            }
-
-            // 完全に覆いかぶさっている場合
-            if ((from < a) && (b < to)) {
-                return nodes[idx];
-            }
-
-            if (a == b) {
-                return nodes[idx];
-            }
-
-
-            T vl = __query(from, to, idx * 2, a, (a + b) / 2);
-            T vr = __query(from, to, idx * 2 + 1, (a + b) / 2 + 1, b);
-            return comparator(vl, vr);
-        }
-
-        void display_nodes() {
-            for (auto s : nodes) {
-                cout << s << " ";
-            }
-            cout << endl;
-        }
-    };
-
-}  // namespace segment_tree
+}  // namespace segtree
 
 
 namespace lazySegmentTree {
